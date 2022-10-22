@@ -1,0 +1,42 @@
+﻿@page "/profile"
+
+<PageTitle>Profile</PageTitle>
+
+@using Blazor_Control_Work.Data
+@using EditorUnit
+
+@inject NavigationManager NavigationManager
+@inject SingletonService SingletonService
+
+<section class="vh-100" style="background-color: #eee;">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-md-12 col-xl-4">
+
+                <div class="card" style="border-radius: 15px;">
+                    <div class="card-body text-center">
+                        @if (SingletonService.user != null)
+                        {
+                            <h4 class="mb-2">@SingletonService.user.Name  @SingletonService.user.Surname</h4>
+                            <p class="text-muted mb-4">
+                                <a href="#!">@SingletonService.user.Email</a>
+                            </p>
+                        }
+                        <button type="button" @onclick="Output" class="btn btn-primary btn-rounded btn-lg">
+                            Output
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    public void Output()
+    {
+        User user = null;
+        SingletonService.SetUser(user);
+        NavigationManager.NavigateTo("/");
+    }
+}

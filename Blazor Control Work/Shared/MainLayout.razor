@@ -1,0 +1,30 @@
+﻿@using Blazor_Control_Work.Data
+@inherits LayoutComponentBase
+
+<PageTitle>Blazor Control Work</PageTitle>
+
+@inject SingletonService SingletonService
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            @if (SingletonService.user == null)
+            {
+                <a href="/reg">Sign up</a>
+                <a href="/log">Log in</a>
+            }
+            else
+            {
+                <a href="/profile">@SingletonService.user.Login</a>
+            }
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
