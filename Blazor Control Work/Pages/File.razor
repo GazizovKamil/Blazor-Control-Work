@@ -1,0 +1,71 @@
+﻿@using Blazor_Control_Work.Data
+@page "/BrowserFile"
+
+<input @bind="@countFile"></input>
+<InputFile OnChange="LoadFiles" multiple />
+
+
+@if (_loadedFiles.Count != countFile)
+{
+    <p><em>Loading...</em></p>
+    _loadedFiles = new();
+}
+else
+{
+    countFile = 0;
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Size</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var file in _loadedFiles)
+            {
+                <tr>
+                    <td>@file.Name</td>
+                    <td>@file.ContentType</td>
+                    <td>@file.Size</td>
+                    <td>
+                        <button @onclick="() => AddToDB(file)">AddDB</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Inject] FileSystemService? service { get; set; }
+    int countFile;
+
+    private List<IBrowserFile> _loadedFiles = new();
+
+    private void LoadFiles(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles(e.FileCount))
+        {
+            _loadedFiles.Add(file);
+            Stream stream = file.OpenReadStream();
+            stream.Dispose();
+        }
+    }
+
+    private void AddToDB(IBrowserFile a)
+    {
+        FileStream fs = new FileStream($"{Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/wwwroot/Images/")}{a.Name}", FileMode.CreateNew);
+        service.UploadImageToDb(fs);
+        _loadedFiles.Remove(a);
+        --countFile;
+
+        
+    }
+
+    protected override void OnInitialized()
+    {
+
+    }
+}
+

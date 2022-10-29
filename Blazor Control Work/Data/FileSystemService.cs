@@ -5,16 +5,13 @@ namespace Blazor_Control_Work.Data
 {
     public class FileSystemService
     {
-        public void UploadImageToDb(string namePhoto, string name)
+        public void UploadImageToDb(Stream filestr)
         {
             var client = new MongoClient("mongodb://localhost");
             var database = client.GetDatabase("Images321");
             var gridFS = new GridFSBucket(database);
 
-            using (FileStream fs = new FileStream("C:\\Users\\Камиль\\Desktop\\image\\"+ namePhoto, FileMode.Open))
-            {
-                gridFS.UploadFromStream($"{name}.jpg", fs);
-            }
+            gridFS.UploadFromStream("photo.jpg", filestr);
         }
 
         public void DownloadToLocal(string name)

@@ -51,7 +51,6 @@
         FileSystemService fileSystemService = new FileSystemService();
         string[] path = namePhoto.Split('\\');
         namePhoto = path[path.Length-1];
-        fileSystemService.UploadImageToDb(namePhoto, SingletonService.user.Name);
     }
 
     public void PhotoLoad()
