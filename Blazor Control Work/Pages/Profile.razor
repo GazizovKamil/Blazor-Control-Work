@@ -7,35 +7,38 @@
 
 @inject NavigationManager NavigationManager
 @inject SingletonService SingletonService
+@inject UserService UserService
+@inject IWebHostEnvironment Environment
 
 <section class="vh-100" style="background-color: #eee;">
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-md-12 col-xl-4">
-
                 <div class="card" style="border-radius: 15px;">
                     <div class="card-body text-center">
-                        @if (SingletonService.user != null)
+                        @if (UserService.user != null)
                         {
                             <div class="mt-3 mb-4">
-                              <img src=""
-                                class="rounded-circle img-fluid" style="width: 100px;" />
+                                @if (UserService.user.pathImg != string.Empty)
+                                {
+                                    <img src="@UserService.user.pathImg" class="fit-picture" />
+                                }
+                                else
+                                {
+                                    <img src="@srcPath" class="fit-picture" />
+                                }
                             </div>
 
-                            <div class="d-flex justify-content-center">
-                                <div class="btn btn-primary btn-rounded btn-lg" @onclick="PhotoSave">
-                             </div>
-                                <input type="file" @bind="namePhoto">
-                            </div>
+                            <InputFile OnChange="@LoadFiles"/>
 
-                            <h4 class="mb-2">@SingletonService.user.Name  @SingletonService.user.Surname</h4>
+                            <h4 class="mb-2">@UserService.user.Name  @UserService.user.Surname</h4>
                             <p class="text-muted mb-4">
-                                <a href="#!">@SingletonService.user.Email</a>
+                                <a href="#!">@UserService.user.Email</a>
                             </p>
+                            <button type="button" @onclick="Output" class="btn btn-primary btn-rounded btn-lg">
+                                Output
+                            </button>
                         }
-                        <button type="button" @onclick="Output" class="btn btn-primary btn-rounded btn-lg">
-                            Output
-                        </button>
                     </div>
                 </div>
             </div>
@@ -44,26 +47,46 @@
 </section>
 
 @code {
-    string namePhoto;
+    string strException;
+    string srcPath;
 
-    public void PhotoSave()
+    private async Task LoadFiles(InputFileChangeEventArgs e)
     {
-        FileSystemService fileSystemService = new FileSystemService();
-        string[] path = namePhoto.Split('\\');
-        namePhoto = path[path.Length-1];
+        try
+        {
+            var path = Path.Combine(Environment.ContentRootPath, "wwwroot", "images", e.File.Name);
+            using (FileStream fs = new(path, FileMode.Create))
+            {
+                await e.File.OpenReadStream(1000000000).CopyToAsync(fs);
+            }
+            FileSystemService.UploadImageToDb(e.File.Name, path);
+            srcPath = "images\\" + $"{e.File.Name}";
+            UserService.user.pathImg = srcPath;
+            Mongo.ReplaceByName(UserService.user.Login, UserService.user);
+        }
+        catch (Exception ex)
+        {
+            strException = $"{ex.Message}";
+        }
     }
 
-    public void PhotoLoad()
+    protected override void OnInitialized()
     {
-        FileSystemService fileSystemService = new FileSystemService();
-        fileSystemService.DownloadToLocal(SingletonService.user.Name);
-    }
+        if (UserService.user.pathImg != null)
+        {
+            var path = Path.Combine(Environment.ContentRootPath, "wwwroot", UserService.user.pathImg);
+            if (!File.Exists(path))
+            {
+                FileSystemService.DownloadToLocal(UserService.user, path);
+            }
+        }
 
+    }
 
     public void Output()
     {
         User user = null;
-        SingletonService.SetUser(user);
+        UserService.SetUser(user);
         NavigationManager.NavigateTo("/");
     }
 }

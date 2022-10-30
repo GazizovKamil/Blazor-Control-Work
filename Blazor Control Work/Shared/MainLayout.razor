@@ -4,6 +4,7 @@
 <PageTitle>Blazor Control Work</PageTitle>
 
 @inject SingletonService SingletonService
+@inject UserService UserService
 
 <div class="page">
     <div class="sidebar">
@@ -12,14 +13,14 @@
 
     <main>
         <div class="top-row px-4">
-            @if (SingletonService.user == null)
+            @if (UserService.user == null)
             {
-                <a href="/reg">Sign up</a>
-                <a href="/log">Log in</a>
+                <a href="reg">Sign up</a>
+                <a href="log">Log in</a>
             }
             else
             {
-                <a href="/profile">@SingletonService.user.Login</a>
+                <a href="profil">@UserService.user.Name @UserService.user.Surname</a>
             }
         </div>
 

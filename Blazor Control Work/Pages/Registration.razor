@@ -6,7 +6,7 @@
 @using EditorUnit
 
 @inject NavigationManager NavigationManager
-@inject SingletonService SingletonService
+@inject UserService UserService
 
 <section class="vh-100 bg-image"
   <div class="mask d-flex align-items-center h-100 gradient-custom-3">
@@ -76,8 +76,10 @@
             if (userPassword == userRepeatPassword)
             {
                 User user = new User(userLogin, userPassword, userName, userSurname, userEmail);
+                UserService.user = user;
+                UserService.authorizationCheck = true;
                 Mongo.AddToDB(user);
-                NavigationManager.NavigateTo("/log");
+                NavigationManager.NavigateTo("/profil");
             }
         }
     }

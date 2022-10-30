@@ -5,8 +5,8 @@
 @using Blazor_Control_Work.Data
 @using EditorUnit
 
-@inject NavigationManager NavigationManager
-@inject SingletonService SingletonService
+@inject NavigationManager Navigation
+@inject UserService UserService
 
 <section class="vh-100 gradient-custom">
     <div class="container py-5 h-100">
@@ -44,18 +44,31 @@
         string userLogin;
         string userPassword;
 
+        private bool CheckError;
+        private string strError = "Неизвестная ошибка";
+
         public void Log_In()
         {
-            if (userLogin != "" && userPassword != "")
+            User user = Mongo.Find(userLogin);
+            if (user != null)
             {
-                SingletonService.SetUser(userLogin);
-
-                var user = SingletonService.GetUser();
-
-                if(userPassword == user.Password)
+                if (userPassword == user.Password)
                 {
-                    NavigationManager.NavigateTo("/");
+                    UserService.user = user;
+                    UserService.authorizationCheck = true;
+                    Navigation.NavigateTo("/profile");
                 }
+                else
+                {
+                    CheckError = true;
+                    strError = "Неверный пароль";
+                }
+
+            }
+            else
+            {
+                CheckError = true;
+                strError = "Пользователя с таким логином не найдено";
             }
         }
     }

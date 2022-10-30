@@ -1,27 +1,38 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 
 namespace Blazor_Control_Work.Data
 {
     public class FileSystemService
     {
-        public void UploadImageToDb(Stream filestr)
+        static public void UploadImageToDb(string filename, string path)
         {
             var client = new MongoClient("mongodb://localhost");
             var database = client.GetDatabase("Images321");
             var gridFS = new GridFSBucket(database);
-
-            gridFS.UploadFromStream("photo.jpg", filestr);
+            using (FileStream fs = new FileStream(path, FileMode.Open))
+            {
+                gridFS.UploadFromStream(filename, fs);
+            }
         }
 
-        public void DownloadToLocal(string name)
+        static public void UploadBrowserImageToDb(FileStream fs, string filename)
         {
             var client = new MongoClient("mongodb://localhost");
             var database = client.GetDatabase("Images321");
             var gridFS = new GridFSBucket(database);
-            using (FileStream fs = new FileStream($"{Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/Images/")}{name}+{"New"}.jpg", FileMode.CreateNew))
+            gridFS.UploadFromStream(filename, fs);
+        }
+
+        static public void DownloadToLocal(User user, string path)
+        {
+            var client = new MongoClient("mongodb://localhost");
+            var database = client.GetDatabase("Images321");
+            var gridFS = new GridFSBucket(database);
+            using (FileStream fs = new FileStream(path, FileMode.CreateNew))
             {
-                gridFS.DownloadToStreamByName($"{name}.jpg", fs);
+                gridFS.DownloadToStreamByName(user.pathImg.Substring(7), fs);
             }
         }
     }

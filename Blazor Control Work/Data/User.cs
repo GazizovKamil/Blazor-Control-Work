@@ -15,6 +15,7 @@ namespace Blazor_Control_Work.Data
         public string Name {get; set;}
         public string Surname {get; set;}
         public string Email {get; set;}
+        public string pathImg { get; set; }
 
         public User(string login, string password, string name, string surname, string email)
         {

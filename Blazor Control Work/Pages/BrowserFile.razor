@@ -12,7 +12,6 @@
 }
 else
 {
-    countFile = 0;
     <table class="table">
         <thead>
             <tr>
@@ -40,7 +39,6 @@ else
 @code {
     [Inject] FileSystemService? service { get; set; }
     int countFile;
-
     private List<IBrowserFile> _loadedFiles = new();
 
     private void LoadFiles(InputFileChangeEventArgs e)
@@ -48,19 +46,15 @@ else
         foreach (var file in e.GetMultipleFiles(e.FileCount))
         {
             _loadedFiles.Add(file);
-            Stream stream = file.OpenReadStream();
-            stream.Dispose();
         }
     }
 
     private void AddToDB(IBrowserFile a)
     {
         FileStream fs = new FileStream($"{Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/wwwroot/Images/")}{a.Name}", FileMode.CreateNew);
-        service.UploadImageToDb(fs);
+        FileSystemService.UploadBrowserImageToDb(fs, a.Name);
         _loadedFiles.Remove(a);
-        --countFile;
-
-        
+        countFile--;
     }
 
     protected override void OnInitialized()
