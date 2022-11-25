@@ -6,7 +6,7 @@
 @using EditorUnit
 
 @inject NavigationManager Navigation
-@inject UserService UserService
+@inject SingletonService SingletonService
 
 <section class="vh-100 gradient-custom">
     <div class="container py-5 h-100">
@@ -54,8 +54,7 @@
             {
                 if (userPassword == user.Password)
                 {
-                    UserService.user = user;
-                    UserService.authorizationCheck = true;
+                    SingletonService.user = user;
                     Navigation.NavigateTo("/profile");
                 }
                 else

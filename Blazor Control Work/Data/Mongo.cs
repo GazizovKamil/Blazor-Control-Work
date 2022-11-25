@@ -48,5 +48,13 @@ namespace EditorUnit
             var collection = database.GetCollection<User>("User");
             collection.ReplaceOne(x => x.Login == name, unit);
         }
+
+        public static void DeleteUser(string Login)
+        {
+            var client = new MongoClient();
+            var database = client.GetDatabase("UserBase");
+            var collection = database.GetCollection<User>("User");
+            var result = collection.DeleteOne(new BsonDocument("Login", $"{Login}"));
+        }
     }
 }

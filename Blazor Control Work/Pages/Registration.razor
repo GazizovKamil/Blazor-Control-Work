@@ -6,7 +6,7 @@
 @using EditorUnit
 
 @inject NavigationManager NavigationManager
-@inject UserService UserService
+@inject SingletonService SingletonService
 
 <section class="vh-100 bg-image"
   <div class="mask d-flex align-items-center h-100 gradient-custom-3">
@@ -34,8 +34,8 @@
                 </div>
 
                 <div class="form-outline mb-4">
-                    <input type="email" @bind = "@userEmail" id="form3Example3cg" class="form-control form-control-lg" />
-                    <label class="form-label" for="form3Example3cg">Your Email</label>
+                    <input type="text" @bind = "@userPatronymic" id="form3Example1cg" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example1cg">Your Patronymic</label>
                 </div>
 
                 <div class="form-outline mb-4">
@@ -65,21 +65,21 @@
     string userLogin;
     string userName;
     string userSurname;
-    string userEmail;
+    string userPatronymic;
     string userPassword;
     string userRepeatPassword;
 
+
     public void RegUser()
     {
-        if (userLogin != "" && userName != "" && userSurname != "" && userEmail != "" && userPassword != "" && userRepeatPassword != "")
+        if (userLogin != "" && userName != "" && userSurname != "" && userPassword != "" && userRepeatPassword != "")
         {
             if (userPassword == userRepeatPassword)
             {
-                User user = new User(userLogin, userPassword, userName, userSurname, userEmail);
-                UserService.user = user;
-                UserService.authorizationCheck = true;
+                User user = new User(userLogin, userPassword, userName, userSurname, userPatronymic);
+                SingletonService.user = user;
                 Mongo.AddToDB(user);
-                NavigationManager.NavigateTo("/profil");
+                NavigationManager.NavigateTo("/profile");
             }
         }
     }

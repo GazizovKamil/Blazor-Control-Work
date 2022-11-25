@@ -25,15 +25,15 @@ namespace Blazor_Control_Work.Data
             gridFS.UploadFromStream(filename, fs);
         }
 
-        static public void DownloadToLocal(User user, string path)
-        {
-            var client = new MongoClient("mongodb://localhost");
-            var database = client.GetDatabase("Images321");
-            var gridFS = new GridFSBucket(database);
-            using (FileStream fs = new FileStream(path, FileMode.CreateNew))
-            {
-                gridFS.DownloadToStreamByName(user.pathImg.Substring(7), fs);
-            }
-        }
+        //static public void DownloadToLocal(User user, string path)
+        //{
+        //    var client = new MongoClient("mongodb://localhost");
+        //    var database = client.GetDatabase("Images321");
+        //    var gridFS = new GridFSBucket(database);
+        //    using (FileStream fs = new FileStream(path, FileMode.CreateNew))
+        //    {
+        //        gridFS.DownloadToStreamByName(user.pathImg.Substring(7), fs);
+        //    }
+        //}
     }
 }
