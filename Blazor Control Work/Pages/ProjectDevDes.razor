@@ -1,0 +1,83 @@
+﻿@page "/projectsDevDes"
+@inject NavigationManager NavigationManager
+@inject SingletonService SingletonService
+
+<PageTitle>Project</PageTitle>
+
+@using Blazor_Control_Work.Data
+@using EditorUnit
+
+@inject SingletonService SingletonService
+
+<h1>Projects</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (SingletonService.user.Role == "Developer")
+        {
+            @foreach (var project in users)
+            {
+                @foreach (var a in project.projects)
+                {
+                    @if (a.Developer == SingletonService.user.Developer)
+                    {
+                        <tr>
+                            <td>@a.Name</td>
+                            <td><button type="button" @onclick="editProjectDev" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Edit</button></td>
+
+                            @if (buttonClick)
+                            {
+                                SingletonService.project = a.Name;
+                            }
+                        </tr>
+                    }
+                }
+            }
+        }
+        else if (SingletonService.user.Role == "Designer")
+        {
+            @foreach (var project in users)
+            {
+                @foreach (var a in project.projects)
+                {
+                    @if (a.Designer == SingletonService.user.Designer)
+                    {
+                        <tr>
+                            <td>@project.Name</td>
+                            <div class="d-flex justify-content-center">
+                                <button type="button" @onclick="editProjectDes" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Edit</button>
+                            </div>
+                            @if (buttonClick)
+                            {
+                                SingletonService.project = a.Name;
+                            }
+                        </tr>
+                    }
+                }
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    List<User> users = Mongo.FindAll();
+    bool buttonClick = false;
+
+    public void editProjectDev()
+    {
+        buttonClick = true;
+        NavigationManager.NavigateTo("/editProjectDev");
+    }
+
+    public void editProjectDes()
+    {
+        buttonClick = true;
+        NavigationManager.NavigateTo("/editProjectDes");
+    }
+}

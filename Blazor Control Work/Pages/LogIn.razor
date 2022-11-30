@@ -29,6 +29,10 @@
                                 <input type="password" @bind="@userPassword"  id="typePasswordX" class="form-control form-control-lg" />
                                 <label class="form-label" for="typePasswordX">Password</label>
                             </div>
+                            @if(checkUser)
+                            {
+                                <label class="form-label" for="typePasswordX">Такого пользователя нет или пороль неправильный</label>
+                            }
 
                             <button class="btn btn-outline-light btn-lg px-5" type="submit" @onclick="Log_In">Login</button>
 
@@ -43,6 +47,7 @@
 @code {
         string userLogin;
         string userPassword;
+        bool checkUser = false;
 
         private bool CheckError;
         private string strError = "Неизвестная ошибка";
@@ -66,8 +71,7 @@
             }
             else
             {
-                CheckError = true;
-                strError = "Пользователя с таким логином не найдено";
+                checkUser = true;
             }
         }
     }

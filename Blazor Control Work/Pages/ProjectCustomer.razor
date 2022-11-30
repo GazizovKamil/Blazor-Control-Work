@@ -1,0 +1,62 @@
+﻿@page "/projects"
+@inject NavigationManager NavigationManager
+@inject SingletonService SingletonService
+@inject IJSRuntime JSRuntime
+
+<PageTitle>ProjectCustomer</PageTitle>
+
+@using Blazor_Control_Work.Data
+@using EditorUnit
+
+@inject SingletonService SingletonService
+
+<h1>Projects</h1>
+
+<div style ="position: absolute; bottom: 5%;right:5%;">
+    <button type="button" href="editProject" @onclick="@createProject" class=" btn btn-warning btn-circle btn-xl"><i class="glyphicon glyphicon-remove"></i>+</button>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Developer</th>
+            <th>Designer</th>
+            <th>View</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (SingletonService.user != null)
+        {
+            @foreach (var project in SingletonService.user.projects)
+            {
+                <tr>
+                    <td>@project.Name</td>
+                    <td>@project.Developer</td>
+                    <td>@project.Designer</td>
+                    <td><button type="button" @onclick="@editProject" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Save</button></td>
+                    @if (buttonClick == true)
+                    {
+                        SingletonService.project = project.Name;
+                        buttonClick = false;
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    bool buttonClick = false;
+
+    public void editProject()
+    {
+        buttonClick = true;
+        NavigationManager.NavigateTo("/editProject");
+    }
+
+    public void createProject()
+    {
+        NavigationManager.NavigateTo("/createProject");
+    }
+}

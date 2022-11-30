@@ -1,6 +1,6 @@
 ﻿@page "/reg"
 
-<PageTitle>Weather forecast</PageTitle>
+<PageTitle>Sign up</PageTitle>
 
 @using Blazor_Control_Work.Data
 @using EditorUnit
@@ -8,7 +8,7 @@
 @inject NavigationManager NavigationManager
 @inject SingletonService SingletonService
 
-<section class="vh-100 bg-image"
+<section class="vh-100 bg-image">
   <div class="mask d-flex align-items-center h-100 gradient-custom-3">
     <div class="container h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
@@ -39,6 +39,16 @@
                 </div>
 
                 <div class="form-outline mb-4">
+                    <select @bind = "@userRole" id="form3Example1cg" class="form-control form-control-lg">
+                        <option></option>
+                        <option>Customer</option>
+                        <option>Developer</option>
+                        <option>Designer</option>
+                    </select>
+                    <label class="form-label" for="form3Example1cg">Your Role</label>
+                </div>
+
+                <div class="form-outline mb-4">
                   <input type="password" @bind = "@userPassword" id="form3Example4cg" class="form-control form-control-lg" />
                   <label class="form-label" for="form3Example4cg">Password</label>
                 </div>
@@ -52,6 +62,7 @@
                   <button type="button" @onclick="@RegUser"
                     class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Register</button>
                 </div>
+
               </form>
             </div>
           </div>
@@ -66,17 +77,18 @@
     string userName;
     string userSurname;
     string userPatronymic;
+    string userRole;
     string userPassword;
     string userRepeatPassword;
 
 
     public void RegUser()
     {
-        if (userLogin != "" && userName != "" && userSurname != "" && userPassword != "" && userRepeatPassword != "")
+        if (userLogin != "" && userName != "" && userSurname != "" && userPassword != "" && userRepeatPassword != "" && userRole != "")
         {
             if (userPassword == userRepeatPassword)
             {
-                User user = new User(userLogin, userPassword, userName, userSurname, userPatronymic);
+                User user = new User(userLogin, userPassword, userName, userSurname, userPatronymic, userRole);
                 SingletonService.user = user;
                 Mongo.AddToDB(user);
                 NavigationManager.NavigateTo("/profile");

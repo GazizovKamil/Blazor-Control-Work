@@ -5,6 +5,7 @@ namespace Blazor_Control_Work.Data
     public class SingletonService
     {
         public User? user { get; set; }
+        public string project { get; set; }
 
         public void SetUser(string name)
         {

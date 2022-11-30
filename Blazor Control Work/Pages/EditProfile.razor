@@ -4,43 +4,149 @@
 
 @using Blazor_Control_Work.Data
 @using EditorUnit
+@using System.Text.RegularExpressions;
 
 @inject NavigationManager NavigationManager
 @inject SingletonService SingletonService
 
-<section class="vh-100 bg-image"
+<section class="vh-100 bg-image">
   <div class="mask d-flex align-items-center h-100 gradient-custom-3">
     <div class="container h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 col-md-9 col-lg-7 col-xl-6">
           <div class="card" style="border-radius: 15px;">
             <div class="card-body p-5">
-
               <form>
+                    @if (SingletonService.user.Role == "Customer")
+                    {
+                    <div class="form-outline mb-4">
+                        <input type="text" @bind = "@userEmail" id="form3Example1cg"  class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example1cg">Your Email</label>
+                    </div>
 
-                <div class="form-outline mb-4">
-                    <input type="text" @bind = "@userEmail" id="form3Example1cg"  class="form-control form-control-lg" />
-                    <label class="form-label" for="form3Example1cg">Your Email</label>
-                </div>
+                    <div class="form-outline mb-4">
+                        <textarea type="text" @bind="@userPhone" maxlength="11" id="form3Example1cg" class="form-control form-control-lg"></textarea>
+                        <label class="form-label" for="form3Example1cg">Your Phone</label>
+                    </div>
 
-                <div class="form-outline mb-4">
-                    <input type="number" @bind = "@userPhone" id="form3Example1cg"  class="form-control form-control-lg" />
-                    <label class="form-label" for="form3Example1cg">Your Phone</label>
-                </div>
+                    <div class="form-outline mb-4">
+                        <select @bind = "@userDept" id="form3Example1cg" class="form-control form-control-lg">
+                            <option></option>
+                            <option>Газификация</option>
+                            <option>Водоснабжение</option>
+                        </select>
+                        <label class="form-label" for="form3Example1cg">Your Dept</label>
+                    </div>
 
-                <div class="form-outline mb-4">
-                    <input type="text" @bind = "@userDept" id="form3Example1cg"  class="form-control form-control-lg" />
-                    <label class="form-label" for="form3Example1cg">Your Dept</label>
-                </div>
+                    <div class="form-outline mb-4">
+                        <input type="text" @bind = "@userPost" id="form3Example1cg"  class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example1cg">Your Post</label><br>
+                        @if (check)
+                        {
+                            <label class="form-label" for="form3Example1cg">Заполните все поля правильно и до конца!!! </label>
+                        }
+                     </div>
 
-                <div class="form-outline mb-4">
-                    <input type="text" @bind = "@userPost" id="form3Example1cg"  class="form-control form-control-lg" />
-                    <label class="form-label" for="form3Example1cg">Your Post</label>
-                </div>
+                    <div class="d-flex justify-content-center">
+                            <button type="button" @onclick="@Save" class = "btn btn-success btn-block btn-lg gradient-custom-4 text-body">Save</button>
+                    </div>
+                        }
+                        else if (SingletonService.user.Role == "Developer")
+                        {
+                    <div class="form-outline mb-4">
+                        <input type="text" @bind = "@userDeveloper" id="form3Example1cg"  class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example1cg">Your name org</label>
+                    </div>
 
-                <div class="d-flex justify-content-center">
-                  <button type="button" @onclick="@Save" class = "btn btn-success btn-block btn-lg gradient-custom-4 text-body">Register</button>
-                </div>
+                    <div class="form-outline mb-4">
+                        <input type="number" @bind = "@userOGRN" id="form3Example1cg"  maxlength="13"  class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example1cg">ОГРН</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        <input type="number" @bind = "@userINN" id="form3Example1cg" maxlength="12" class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example1cg">ИНН</label>
+                    </div>
+
+                        <div class="form-outline mb-4">
+                            <input type="number" @bind = "@userKPP" id="form3Example1cg" maxlength="9" class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example1cg">КПП</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        <input type="text" @bind = "@userAdres" id="form3Example1cg"  class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example1cg">Адрес</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        <input type="text" @bind = "@userEmail" id="form3Example1cg"  class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example1cg">Email</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                            <textarea type="text" @bind="@userPhone" maxlength="11" id="form3Example1cg" class="form-control form-control-lg"></textarea>
+                            <label class="form-label" for="form3Example1cg">Your Phone</label><br>
+                            @if (check)
+                            {
+                                <label class="form-label" for="form3Example1cg">Заполните все поля правильно и до конца!!! </label>
+                            }
+                    </div>
+
+                    <div class="d-flex justify-content-center">
+                            <button type="button" @onclick="@SaveDeveloper" class = "btn btn-success btn-block btn-lg gradient-custom-4 text-body">Save</button>
+                    </div>
+                        }
+
+                        else if (SingletonService.user.Role == "Designer")
+                        {
+                    <div class="form-outline mb-4">
+                        <input type="text" @bind = "@userDesigner" id="form3Example1cg"  class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example1cg">Your name org</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                            <input type="number" @bind = "@userOGRN" id="form3Example1cg" maxlength="13" class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example1cg">ОГРН</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                            <input type="number" @bind = "@userINN" id="form3Example1cg" maxlength="12" class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example1cg">ИНН</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                            <input type="number" @bind = "@userKPP" id="form3Example1cg" maxlength="9" class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example1cg">КПП</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        <input type="text" @bind = "@userAdres" id="form3Example1cg"  class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example1cg">Адрес</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        <input type="text" @bind = "@userEmail" id="form3Example1cg"  class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example1cg">Email</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        <textarea type="text" @bind="@userPhone" maxlength="11" id="form3Example1cg" class="form-control form-control-lg"></textarea>
+                        <label class="form-label" for="form3Example1cg">Your Phone</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        <input type="text" @bind = "@userGIP" id="form3Example1cg"  class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example1cg">ГИП</label><br>
+                        @if (check)
+                        {
+                               <label class="form-label" for="form3Example1cg">Заполните все поля правильно и до конца!!! </label>
+                        }
+                    </div>
+
+                    <div class="d-flex justify-content-center">
+                            <button type="button" @onclick="@SaveDesigner" class = "btn btn-success btn-block btn-lg gradient-custom-4 text-body">Save</button>
+                    </div>
+                    }
               </form>
             </div>
           </div>
@@ -56,16 +162,68 @@
     string userPhone;
     string userDept;
     string userPost;
-    string userRepeatPassword;
+    string userDeveloper;
+    string userDesigner;
+    int userOGRN;
+    int userINN;
+    int userKPP;
+    string userAdres;
+    string userGIP;
+    bool check = false;
 
     public void Save()
     {
-        if (userEmail != "" && userRepeatPassword != "" && userPost != "" && userDept != "" && userPhone != "")
+        if (userEmail != null && userPost != null && userDept != null && userPhone != null)
         {
-            User user = new User(SingletonService.user.Login, SingletonService.user.Password, SingletonService.user.Name, SingletonService.user.Surname, SingletonService.user.Patronymic, userEmail, userPhone, userDept, userPost);
+            Match isMatch = Regex.Match(userEmail, @"(@)(.+)$", RegexOptions.IgnoreCase);
+            if (isMatch.Success && userPhone.ToString().Length == 11)
+            {
+                User user = new User(SingletonService.user.Login, SingletonService.user.Password, SingletonService.user.Name, SingletonService.user.Surname, SingletonService.user.Patronymic, userEmail, userPhone, userDept, userPost, SingletonService.user.Role);
+                Mongo.ReplaceByName(user.Login, user);
+                SingletonService.user = user;
+                check = false;
+                NavigationManager.NavigateTo("/profile");
+            }
+            else
+            {
+                check = true;
+            }
+        }
+        else
+        {
+            check = true;
+        }
+    }
+
+    public void SaveDeveloper()
+    {
+        if (userDeveloper != null && userOGRN != null && userINN != null && userKPP != null && userAdres != null && userEmail != null && userPhone != null)
+        {
+            User user = new User(SingletonService.user.Login, SingletonService.user.Password, SingletonService.user.Name, SingletonService.user.Surname, SingletonService.user.Patronymic, SingletonService.user.Role, userDeveloper, userOGRN, userINN, userKPP, userAdres, userEmail, userPhone);
             Mongo.ReplaceByName(user.Login, user);
             SingletonService.user = user;
+            check = false;
             NavigationManager.NavigateTo("/profile");
+        }
+        else
+        {
+            check = true;
+        }
+    }
+
+    public void SaveDesigner()
+    {
+        if (userEmail != null && userDesigner != null && userOGRN != null && userPhone != null && userINN != null && userKPP != null && userGIP != null)
+        {
+            User user = new User(SingletonService.user.Login, SingletonService.user.Password, SingletonService.user.Name, SingletonService.user.Surname, SingletonService.user.Patronymic, SingletonService.user.Role, userDesigner, userOGRN, userINN, userKPP, userAdres, userEmail, userPhone, userGIP);
+            Mongo.ReplaceByName(user.Login, user);
+            SingletonService.user = user;
+            check = false;
+            NavigationManager.NavigateTo("/profile");
+        }
+        else
+        {
+            check = true;
         }
     }
 }

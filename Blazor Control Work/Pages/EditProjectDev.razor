@@ -1,0 +1,110 @@
+﻿@page "/editProjectDev"
+
+<PageTitle>Edit</PageTitle>
+
+@using Blazor_Control_Work.Data
+@using EditorUnit
+
+@inject NavigationManager NavigationManager
+@inject SingletonService SingletonService
+
+<section class="vh-100 bg-image">
+  <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+    <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+          <div class="card" style="border-radius: 15px;">
+            <div class="card-body p-5">
+                @foreach (var project in users)
+                {
+                    @foreach (var a in project.projects)
+                    {
+                        @if (a.Name == SingletonService.project)
+                        {
+                            Project project1 = new Project(a.Name);
+                            var index = project.projects.IndexOf(project1) + 1;
+                            <label class="form-label" for="form3Example1cg">@index</label>
+
+                            @if (project.projects[(int)index].Dept == "Газификация")
+                            {
+                                <h1>Технико-экономические показатели</h1>
+                                <h1>Газопровод-ввод низкого давления</h1>
+                                <label class="form-label" for="form3Example1cg">Диаметр (мм) трубопровода</label>
+                                <input type="text" id="form3Example1cg" class="form-control form-control-lg" />
+
+                                <label class="form-label" for="form3Example1cg">Протяженность линейного объекта</label>
+                                <input type="text" id="form3Example1cg" class="form-control form-control-lg" />
+
+                                <h1>Вводной газопровод низкого давления</h1>
+                                <label class="form-label" for="form3Example1cg">Протяженность линейного объекта</label>
+                                <input type="text" id="form3Example1cg" class="form-control form-control-lg" />
+
+                                <h1>Сметная стоимсть работ, тыс. руб и срок разработки</h1>
+                                <label class="form-label" for="form3Example1cg">Стоимость</label>
+                                <input type="text" id="form3Example1cg" class="form-control form-control-lg" />
+
+                                <label class="form-label" for="form3Example1cg">Срок разработки проектой документации, месяцев</label>
+                                <input type="text" id="form3Example1cg" class="form-control form-control-lg" />
+                            }
+                            else if (project.projects[(int)index].Dept == "Водоснабжение")
+                            {
+                                <h1>Технико-экономические показатели</h1>
+                                <label class="form-label" for="form3Example1cg">Диаметр (мм) трубопровода</label>
+                                <input type="number" @bind = "dimTryba" id="form3Example1cg" class="form-control form-control-lg" />
+
+                                <label class="form-label" for="form3Example1cg">Протяженность линейного объекта</label>
+                                <input type="number" @bind = "dlinObject" id="form3Example1cg" class="form-control form-control-lg" />
+
+                                <label class="form-label" for="form3Example1cg">Производительность БОС, куб м/сут</label>
+                                <input type="number" @bind="kpdBos" id="form3Example1cg" class="form-control form-control-lg" />
+
+                                <label class="form-label" for="form3Example1cg">Колтчество КНС</label>
+                                <input type="number" @bind="countKNS" id="form3Example1cg" class="form-control form-control-lg" />
+
+                                <label class="form-label" for="form3Example1cg">Производительность КНС (куб м/ч)</label>
+                                <input type="number" @bind="kpdKNS" id="form3Example1cg" class="form-control form-control-lg" />
+
+                                <h1>Сметная стоимсть работ, тыс. руб и срок разработки</h1>
+                                <label class="form-label" for="form3Example1cg">Стоимость</label>
+                                <input type="number" @bind="Price" id="form3Example1cg" class="form-control form-control-lg" />
+
+                                <label class="form-label" for="form3Example1cg">Срок разработки проектой документации, месяцев</label>
+                                <input type="text" @bind="dateSrok" id="form3Example1cg" class="form-control form-control-lg" />
+
+                                <div class="d-flex justify-content-center">
+                                    <button type="button" href="" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Save</button>
+                                </div>
+
+                                Project project2 = new Project(a.Name, a.Developer, a.Designer, a.Dept, dimTryba, dlinObject, kpdBos, countKNS, kpdKNS, Price, dateSrok);
+                                project.projects[index] = project2;
+                                Mongo.ReplaceByName(project.Name, project);
+
+                            }
+                        }
+                    }
+                }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+@code {
+    int dimTryba;
+    int dlinObject;
+    int kpdBos;
+    int countKNS;
+    int kpdKNS;
+    int Price;
+    string dateSrok;
+
+    List<User> users = Mongo.FindAll();
+    
+    public void Save()
+    {
+        
+    }
+}

@@ -21,6 +21,24 @@ namespace EditorUnit
             collection.InsertOne(user);
         }
 
+        public static void AddToProjectDB(Project project)
+        {
+            var client = new MongoClient();
+            var database = client.GetDatabase("ProjectBase");
+            var collection = database.GetCollection<Project>("Project");
+            collection.InsertOne(project);
+        }
+
+        public static List<Project> FindAllProject()
+        {
+            var client = new MongoClient();
+            var database = client.GetDatabase("ProjectBase");
+            var collection = database.GetCollection<Project>("Project");
+            var list = collection.Find(x => true).ToList();
+
+            return list;
+        }
+
         public static List<User> FindAll()
         {
             var client = new MongoClient();
@@ -41,12 +59,12 @@ namespace EditorUnit
             return one;
         }
 
-        public static void ReplaceByName(string name, User unit)
+        public static void ReplaceByName(string name, User user)
         {
             var client = new MongoClient();
             var database = client.GetDatabase("UserBase");
             var collection = database.GetCollection<User>("User");
-            collection.ReplaceOne(x => x.Login == name, unit);
+            collection.ReplaceOne(x => x.Login == name, user);
         }
 
         public static void DeleteUser(string Login)
