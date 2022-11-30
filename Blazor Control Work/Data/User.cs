@@ -100,14 +100,5 @@ namespace Blazor_Control_Work.Data
             PhoneNumber = phoneNumber;
             GIP = gip;
         }
-
-
-        [BsonIgnoreIfDefault]
-        public List<Project> projects = new List<Project>();
-
-        public void AddProject(Project project)
-        {
-            projects.Add(project);
-        }
     }
 }

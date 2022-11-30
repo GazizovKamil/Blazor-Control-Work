@@ -15,73 +15,80 @@
         <div class="col-12 col-md-9 col-lg-7 col-xl-6">
           <div class="card" style="border-radius: 15px;">
             <div class="card-body p-5">
-                @foreach (var project in users)
+
+                @if (SingletonService.project.Dept == "Газификация")
                 {
-                    @foreach (var a in project.projects)
-                    {
-                        @if (a.Name == SingletonService.project)
-                        {
-                            Project project1 = new Project(a.Name);
-                            var index = project.projects.IndexOf(project1) + 1;
-                            <label class="form-label" for="form3Example1cg">@index</label>
+                    <label class="form-label" for="form3Example1cg">Письмо-обращение на имя Президента</label>
+                    <InputFile OnChange="@((InputFileChangeEventArgs args) => OnFileSelected(args))"></InputFile>
 
-                            @if (project.projects[(int)index].Dept == "Газификация")
-                            {
-                                <h1>Технико-экономические показатели</h1>
-                                <h1>Газопровод-ввод низкого давления</h1>
-                                <label class="form-label" for="form3Example1cg">Диаметр (мм) трубопровода</label>
-                                <input type="text" id="form3Example1cg" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example1cg">Задание на проектирование</label>
+                    <InputFile OnChange="@((InputFileChangeEventArgs args) => OnFileSelected(args))"></InputFile>
 
-                                <label class="form-label" for="form3Example1cg">Протяженность линейного объекта</label>
-                                <input type="text" id="form3Example1cg" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example1cg">Ситуационный план</label>
+                    <InputFile OnChange="@((InputFileChangeEventArgs args) => OnFileSelected(args))"></InputFile>
 
-                                <h1>Вводной газопровод низкого давления</h1>
-                                <label class="form-label" for="form3Example1cg">Протяженность линейного объекта</label>
-                                <input type="text" id="form3Example1cg" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example1cg">Технические условия на присоединение к газораспределительной сети</label>
+                    <InputFile OnChange="@((InputFileChangeEventArgs args) => OnFileSelected(args))"></InputFile>
 
-                                <h1>Сметная стоимсть работ, тыс. руб и срок разработки</h1>
-                                <label class="form-label" for="form3Example1cg">Стоимость</label>
-                                <input type="text" id="form3Example1cg" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example1cg">Технический паспорт объекта СКБ</label>
+                    <InputFile OnChange="@((InputFileChangeEventArgs args) => OnFileSelected(args))"></InputFile>
 
-                                <label class="form-label" for="form3Example1cg">Срок разработки проектой документации, месяцев</label>
-                                <input type="text" id="form3Example1cg" class="form-control form-control-lg" />
-                            }
-                            else if (project.projects[(int)index].Dept == "Водоснабжение")
-                            {
-                                <h1>Технико-экономические показатели</h1>
-                                <label class="form-label" for="form3Example1cg">Диаметр (мм) трубопровода</label>
-                                <input type="number" @bind = "dimTryba" id="form3Example1cg" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example1cg">Технический паспорт котельной</label>
+                    <InputFile OnChange="@((InputFileChangeEventArgs args) => OnFileSelected(args))"></InputFile>
 
-                                <label class="form-label" for="form3Example1cg">Протяженность линейного объекта</label>
-                                <input type="number" @bind = "dlinObject" id="form3Example1cg" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example1cg">Акт обследования объекта</label>
+                    <InputFile OnChange="@((InputFileChangeEventArgs args) => OnFileSelected(args))"></InputFile>
 
-                                <label class="form-label" for="form3Example1cg">Производительность БОС, куб м/сут</label>
-                                <input type="number" @bind="kpdBos" id="form3Example1cg" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example1cg">Технические условия на сети электроснабжения</label>
+                    <InputFile OnChange="@((InputFileChangeEventArgs args) => OnFileSelected(args))"></InputFile>
 
-                                <label class="form-label" for="form3Example1cg">Колтчество КНС</label>
-                                <input type="number" @bind="countKNS" id="form3Example1cg" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example1cg">Согласование посадки котельной</label>
+                    <InputFile OnChange="@((InputFileChangeEventArgs args) => OnFileSelected(args))"></InputFile>
 
-                                <label class="form-label" for="form3Example1cg">Производительность КНС (куб м/ч)</label>
-                                <input type="number" @bind="kpdKNS" id="form3Example1cg" class="form-control form-control-lg" />
+                    <div class="d-flex justify-content-center">
+                        <button type="button" @onclick="Save" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Save</button>
+                    </div>
 
-                                <h1>Сметная стоимсть работ, тыс. руб и срок разработки</h1>
-                                <label class="form-label" for="form3Example1cg">Стоимость</label>
-                                <input type="number" @bind="Price" id="form3Example1cg" class="form-control form-control-lg" />
+                }
+                else if (SingletonService.project.Dept == "Водоснабжение")
+                {
+                    <h1>Технико-экономические показатели</h1>
+                    <label class="form-label" for="form3Example1cg">Акт обследования и выбора трассы сети водоснабжения</label>
+                    <InputFile></InputFile>
 
-                                <label class="form-label" for="form3Example1cg">Срок разработки проектой документации, месяцев</label>
-                                <input type="text" @bind="dateSrok" id="form3Example1cg" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example1cg">Акт обследованияи выбор места под проектируемую скважину</label>
+                    <InputFile></InputFile>
 
-                                <div class="d-flex justify-content-center">
-                                    <button type="button" href="" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Save</button>
-                                </div>
+                    <label class="form-label" for="form3Example1cg">Согласованныйситуационный план водонапорных башен</label>
+                    <InputFile></InputFile>
 
-                                Project project2 = new Project(a.Name, a.Developer, a.Designer, a.Dept, dimTryba, dlinObject, kpdBos, countKNS, kpdKNS, Price, dateSrok);
-                                project.projects[index] = project2;
-                                Mongo.ReplaceByName(project.Name, project);
+                    <label class="form-label" for="form3Example1cg">План населенного пункта в М 1:1000</label>
+                    <InputFile></InputFile>
 
-                            }
-                        }
-                    }
+                    <label class="form-label" for="form3Example1cg">Технические условия на водоснабжение</label>
+                    <InputFile></InputFile>
+
+                    <label class="form-label" for="form3Example1cg">Технические условия на электроснабжение </label>
+                    <InputFile></InputFile>
+
+                    <label class="form-label" for="form3Example1cg">Градостроительный план земельного участка</label>
+                    <InputFile></InputFile>
+
+                    <label class="form-label" for="form3Example1cg">Справка соглосования с собственникамиземельных участков</label>
+                    <InputFile></InputFile>
+
+                    <label class="form-label" for="form3Example1cg">Документ, подтверждающий проведения межевания с присвоение кадастрового номера участка</label>
+                    <InputFile></InputFile>
+
+                    <label class="form-label" for="form3Example1cg">Заключение Роспотребнадзора</label>
+                    <InputFile></InputFile>
+
+                    <label class="form-label" for="form3Example1cg">Сведение о наличие водозаборных скважин на территории</label>
+                    <InputFile></InputFile>
+
+                    <div class="d-flex justify-content-center">
+                        <button type="button" href="" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Save</button>
+                    </div>
                 }
             </div>
           </div>
@@ -93,18 +100,18 @@
 
 
 @code {
-    int dimTryba;
-    int dlinObject;
-    int kpdBos;
-    int countKNS;
-    int kpdKNS;
-    int Price;
-    string dateSrok;
+    List<IBrowserFile> pismoPrez = new List<IBrowserFile>();
 
-    List<User> users = Mongo.FindAll();
-    
     public void Save()
     {
-        
+        Project project = new Project(SingletonService.project.Name, SingletonService.project.Customer, SingletonService.project.Developer, SingletonService.project.Developer, SingletonService.project.Dept, pismoPrez[0], pismoPrez[1], pismoPrez[2], pismoPrez[3], pismoPrez[4], pismoPrez[5], pismoPrez[6], pismoPrez[7], pismoPrez[8]);
+        Mongo.ReplaceByName(project.Name, project);
+    }
+
+    private void OnFileSelected(InputFileChangeEventArgs e)
+    {
+        var selectedFiles = e.GetMultipleFiles();
+        pismoPrez.Add(selectedFiles[0]);
+        this.StateHasChanged();
     }
 }

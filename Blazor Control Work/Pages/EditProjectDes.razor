@@ -14,58 +14,52 @@
         <div class="col-12 col-md-9 col-lg-7 col-xl-6">
           <div class="card" style="border-radius: 15px;">
             <div class="card-body p-5">
-                
-                @foreach (var project in users)
-                {
-                    @foreach (var a in project.projects)
-                    {
-                        @if (a.Name == SingletonService.project)
-                        {
-                            Project project1 = new Project(a.Name);
-                            var index = project.projects.IndexOf(project1) + 1;
-                            <label class="form-label" for="form3Example1cg">@index</label>
 
-                            @if (project.projects[(int)index].Dept == "Газификация")
-                            {
-                                <label class="form-label" for="form3Example1cg">Письмо-обращение на имя Президента</label>
-                                <InputFile></InputFile>
-                                <label class="form-label" for="form3Example1cg">Задание на проектирование</label>
-                                <InputFile></InputFile>
-                                <label class="form-label" for="form3Example1cg">Ситуационный план</label>
-                                <InputFile></InputFile>
-                                <label class="form-label" for="form3Example1cg">Технические условия на присоединение к газораспределительной сети</label>
-                                <InputFile></InputFile>
-                                <label class="form-label" for="form3Example1cg">Технический паспорт объекта СКБ</label>
-                                <InputFile></InputFile>
-                                <label class="form-label" for="form3Example1cg">Технический паспорт котельной</label>
-                                <InputFile></InputFile>
-                                <label class="form-label" for="form3Example1cg">Акт обследования объекта</label>
-                                <InputFile></InputFile>
-                                <label class="form-label" for="form3Example1cg">Технические условия на сети электроснабжения</label>
-                                <InputFile></InputFile>
-                                <label class="form-label" for="form3Example1cg">Согласование посадки котельной</label>
-                                <InputFile></InputFile>
-                            }
-                            else if (project.projects[(int)index].Dept == "Водоснабжение")
-                            {
-                                <label class="form-label" for="form3Example1cg">Письмо-обращение на имя Президента</label>
-                                <InputFile></InputFile>
-                                <label class="form-label" for="form3Example1cg">Задание на проектирование</label>
-                                <InputFile></InputFile>
-                                <label class="form-label" for="form3Example1cg">Ситуационный план</label>
-                                <InputFile></InputFile>
-                                <label class="form-label" for="form3Example1cg">Технические условия на присоединение к водоканальным сетям</label>
-                                <InputFile></InputFile>
-                                <label class="form-label" for="form3Example1cg">Технический паспорт объекта СКБ</label>
-                                <InputFile></InputFile>
-                                <label class="form-label" for="form3Example1cg">Акт обследования объекта</label>
-                                <InputFile></InputFile>
-                                <label class="form-label" for="form3Example1cg">Технические условия на сети водоснабжения</label>
-                                <InputFile></InputFile>
-                                <label class="form-label" for="form3Example1cg">Согласование посадки котельной</label>
-                            }
-                        }
-                    }
+                @if (SingletonService.project.Dept == "Газификация")
+                {
+                    <h1>Технико-экономические показатели</h1>
+                    <h1>Газопровод-ввод низкого давления</h1>
+                    <label class="form-label" for="form3Example1cg">Диаметр (мм) трубопровода</label>
+                    <input type="number" id="form3Example1cg" class="form-control form-control-lg" />
+
+                    <label class="form-label" for="form3Example1cg">Протяженность линейного объекта</label>
+                    <input type="number" id="form3Example1cg" class="form-control form-control-lg" />
+
+                    <h1>Вводной газопровод низкого давления</h1>
+                    <label class="form-label" for="form3Example1cg">Протяженность линейного объекта</label>
+                    <input type="number" id="form3Example1cg" class="form-control form-control-lg" />
+
+                    <h1>Сметная стоимсть работ, тыс. руб и срок разработки</h1>
+                    <label class="form-label" for="form3Example1cg">Стоимость</label>
+                    <input type="number" id="form3Example1cg" class="form-control form-control-lg" />
+
+                    <label class="form-label" for="form3Example1cg">Срок разработки проектой документации, месяцев</label>
+                    <input type="number" id="form3Example1cg" class="form-control form-control-lg" />
+                }
+                else if (SingletonService.project.Dept == "Водоснабжение")
+                {
+                    <h1>Технико-экономические показатели</h1>
+                    <label class="form-label" for="form3Example1cg">Диаметр (мм) трубопровода</label>
+                    <input type="number" id="form3Example1cg" class="form-control form-control-lg" />
+
+                    <label class="form-label" for="form3Example1cg">Протяженность линейного объекта</label>
+                    <input type="number" id="form3Example1cg" class="form-control form-control-lg" />
+
+                    <label class="form-label" for="form3Example1cg">Производительность БОС (куб м/сут)</label>
+                    <input type="number" id="form3Example1cg" class="form-control form-control-lg" />
+
+                    <label class="form-label" for="form3Example1cg">Количество КНС</label>
+                    <input type="number" id="form3Example1cg" class="form-control form-control-lg" />
+
+                    <label class="form-label" for="form3Example1cg">Производительность КНС (куб м/ч)</label>
+                    <input type="number" id="form3Example1cg" class="form-control form-control-lg" />
+
+                    <h1>Сметная стоимсть работ, тыс. руб и срок разработки</h1>
+                    <label class="form-label" for="form3Example1cg">Стоимость</label>
+                    <input type="number" id="form3Example1cg" class="form-control form-control-lg" />
+
+                    <label class="form-label" for="form3Example1cg">Срок разработки проектой документации, месяцев</label>
+                    <input type="number" id="form3Example1cg" class="form-control form-control-lg" />
                 }
             </div>
           </div>
@@ -77,5 +71,5 @@
 
 
 @code {
-        List<User> users = Mongo.FindAll();
+
 }

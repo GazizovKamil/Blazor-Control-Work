@@ -76,9 +76,8 @@
 
     public void Save()
     {
-        Project project = new Project(nameProject, Developer, Designer, SingletonService.user.Dept);
-        SingletonService.user.AddProject(project);
-        Mongo.ReplaceByName(SingletonService.user.Login, SingletonService.user);
+        Project project = new Project(nameProject,SingletonService.user.Name, Developer, Designer, SingletonService.user.Dept);
+        Mongo.AddToDB(project);
         NavigationManager.NavigateTo("/projects");
     }
 }

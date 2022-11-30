@@ -21,44 +21,29 @@
     <tbody>
         @if (SingletonService.user.Role == "Developer")
         {
-            @foreach (var project in users)
+            @foreach (var project in project)
             {
-                @foreach (var a in project.projects)
+                @if (project.Developer == SingletonService.user.Developer)
                 {
-                    @if (a.Developer == SingletonService.user.Developer)
-                    {
-                        <tr>
-                            <td>@a.Name</td>
-                            <td><button type="button" @onclick="editProjectDev" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Edit</button></td>
-
-                            @if (buttonClick)
-                            {
-                                SingletonService.project = a.Name;
-                            }
-                        </tr>
-                    }
+                    <tr>
+                        <td>@project.Name</td>
+                        <td><button type="button" @onclick="()=>editProjectDev(project)" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Edit</button></td>
+                    </tr>
                 }
             }
         }
         else if (SingletonService.user.Role == "Designer")
         {
-            @foreach (var project in users)
+            @foreach (var project in project)
             {
-                @foreach (var a in project.projects)
+                @if (project.Designer == SingletonService.user.Designer)
                 {
-                    @if (a.Designer == SingletonService.user.Designer)
-                    {
-                        <tr>
-                            <td>@project.Name</td>
-                            <div class="d-flex justify-content-center">
-                                <button type="button" @onclick="editProjectDes" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Edit</button>
-                            </div>
-                            @if (buttonClick)
-                            {
-                                SingletonService.project = a.Name;
-                            }
-                        </tr>
-                    }
+                    <tr>
+                        <td>@project.Name</td>
+                        <div class="d-flex justify-content-center">
+                            <button type="button" @onclick="()=>editProjectDes(project)" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Edit</button>
+                        </div>
+                    </tr>
                 }
             }
         }
@@ -66,18 +51,17 @@
 </table>
 
 @code {
-    List<User> users = Mongo.FindAll();
-    bool buttonClick = false;
+    List<Project> project = Mongo.FindAllProject();
 
-    public void editProjectDev()
+    public void editProjectDev(Project project)
     {
-        buttonClick = true;
+        SingletonService.project = project;
         NavigationManager.NavigateTo("/editProjectDev");
     }
 
-    public void editProjectDes()
+    public void editProjectDes(Project project)
     {
-        buttonClick = true;
+        SingletonService.project = project;
         NavigationManager.NavigateTo("/editProjectDes");
     }
 }

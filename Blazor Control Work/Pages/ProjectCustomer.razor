@@ -28,18 +28,13 @@
     <tbody>
         @if (SingletonService.user != null)
         {
-            @foreach (var project in SingletonService.user.projects)
+            @foreach (var project in projectList)
             {
                 <tr>
                     <td>@project.Name</td>
                     <td>@project.Developer</td>
                     <td>@project.Designer</td>
-                    <td><button type="button" @onclick="@editProject" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Save</button></td>
-                    @if (buttonClick == true)
-                    {
-                        SingletonService.project = project.Name;
-                        buttonClick = false;
-                    }
+                    <td><button type="button" @onclick="()=>editProject(project)" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Save</button></td>
                 </tr>
             }
         }
@@ -47,11 +42,10 @@
 </table>
 
 @code {
-    bool buttonClick = false;
-
-    public void editProject()
+    List<Project> projectList = Mongo.FindAllProject();
+    public void editProject(Project name)
     {
-        buttonClick = true;
+        SingletonService.project = name;
         NavigationManager.NavigateTo("/editProject");
     }
 
