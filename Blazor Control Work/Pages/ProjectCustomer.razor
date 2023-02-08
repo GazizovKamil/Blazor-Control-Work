@@ -2,6 +2,8 @@
 @inject NavigationManager NavigationManager
 @inject SingletonService SingletonService
 @inject IJSRuntime JSRuntime
+@using Microsoft.AspNetCore.SignalR.Client
+@implements IAsyncDisposable
 
 <PageTitle>ProjectCustomer</PageTitle>
 
@@ -35,22 +37,154 @@
                     <td>@project.Developer</td>
                     <td>@project.Designer</td>
                     <td><button type="button" @onclick="()=>editProject(project)" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Save</button></td>
+                    <td><button type="button" @onclick="()=>openChat()" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Chat</button></td>
                 </tr>
             }
         }
     </tbody>
 </table>
 
+@if (chat)
+{
+    <section style="background-color: #eee;">
+        <div class="container py-5">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-6">
+
+                    <div class="card" id="chat2">
+                        <div class="card-header d-flex justify-content-between align-items-center p-3">
+                            <h5 class="mb-0">Chat</h5>
+                            <button type="button" class="btn btn-primary btn-sm" data-mdb-ripple-color="dark">
+                                Let's Chat
+                                App
+                            </button>
+                        </div>
+                        <div class="card-body" data-mdb-perfect-scrollbar="true" style="position: fixed; height: 400px;overflow:auto">
+
+                        @foreach (var message in messages)
+                        {
+                            <div class="d-flex flex-row justify-content-start">
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp"
+                                alt="avatar 1" style="width: 45px; height: 100%;">
+                                <div>
+                                    <p class="small p-2 ms-3 mb-1 rounded-3" style="background-color: #f5f6f7;">@message</p>
+                                </div>
+                            </div>
+                        }
+                        
+                        <div class="card-footer text-muted d-flex justify-content-start align-items-center p-3">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp"
+                                alt="avatar 3" style="width: 40px; height: 100%;">
+                            <input @bind="messageInput" type="text" class="form-control form-control-lg" id="exampleFormControlInput1"
+                                placeholder="Type message">
+                            <button @onclick="Send" class="btn btn-danger" disabled="@(!IsConnected)">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="background-color: #eee;">
+        <div class="container py-5">
+
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-6">
+
+                    <div class="card" id="chat2">
+                        <div class="card-header d-flex justify-content-between align-items-center p-3">
+                            <h5 class="mb-0">Chat</h5>
+                            <button type="button" class="btn btn-primary btn-sm" data-mdb-ripple-color="dark">
+                                Let's Chat
+                                App
+                            </button>
+                        </div>
+                        <div class="card-body" data-mdb-perfect-scrollbar="true" style="position: relative; height: 400px">
+                            @foreach (var message in messages)
+                            {
+                                <div class="d-flex flex-row justify-content-start">
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp"
+                                 alt="avatar 1" style="width: 45px; height: 100%;">
+                                    <div>
+                                        <p class="small p-2 ms-3 mb-1 rounded-3" style="background-color: #f5f6f7;">@message</p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="card-footer text-muted d-flex justify-content-start align-items-center p-3">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp"
+                             alt="avatar 3" style="width: 40px; height: 100%;">
+                            <input @bind="messageInput" type="text" class="form-control form-control-lg" id="exampleFormControlInput1"
+                               placeholder="Type message">
+                            <button @onclick="Send" class="btn btn-danger" disabled="@(!IsConnected)">Send</button>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+}
+
 @code {
+    private HubConnection? hubConnection;
+    private List<string> messages = new List<string>();
+    private string? userInput;
+    private string? messageInput;
+
     List<Project> projectList = Mongo.FindAllProject();
+    bool chat = false;
     public void editProject(Project name)
     {
         SingletonService.project = name;
         NavigationManager.NavigateTo("/editProject");
     }
 
+    public void openChat()
+    {
+        chat = true;
+    }
+
     public void createProject()
     {
         NavigationManager.NavigateTo("/createProject");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/chat"))
+            .Build();
+
+        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+        {
+            var encodedMsg = $"{user}: {message}";
+            messages.Add(encodedMsg);
+            InvokeAsync(StateHasChanged);
+        });
+
+        await hubConnection.StartAsync();
+    }
+
+    private async Task Send()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("SendMessage", SingletonService.user.Name, messageInput);
+        }
+    }
+
+    public bool IsConnected =>
+        hubConnection?.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
     }
 }
